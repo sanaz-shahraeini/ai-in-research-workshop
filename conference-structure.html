@@ -108,10 +108,13 @@
 
         /* Header and shared components from index.html */
         .site-header { position: sticky; top: 0; z-index: 50; margin: 10px 20px 0; border-radius: 16px; background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.6); }
-        .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; }
+        .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; gap: 10px; }
         .brand { display: flex; align-items: center; gap: 10px; color: #2d3748; font-weight: 800; font-size: 1.1rem; text-decoration: none; }
         .brand .logo { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #667eea, #764ba2); display: grid; place-items: center; color: #fff; font-size: 18px; box-shadow: 0 6px 16px rgba(102,126,234,0.35); }
         .nav-links { display: flex; gap: 8px; flex-wrap: wrap; }
+        .nav-actions { display: flex; align-items: center; gap: 8px; }
+        .menu-toggle { display: none; border: 1px solid #e5e7eb; background: #ffffff; border-radius: 10px; padding: 8px 10px; cursor: pointer; }
+        .menu-toggle:focus { outline: 2px solid #667eea55; }
         .nav-links a { text-decoration: none; color: #2d3748; font-weight: 600; padding: 10px 14px; border-radius: 10px; transition: all .2s ease; }
         .nav-links a:hover { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; box-shadow: 0 8px 24px rgba(102,126,234,0.35); transform: translateY(-2px); }
 
@@ -146,7 +149,12 @@
         .footer-inner { max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 6px; align-items: center; }
         .footer p { margin: 0; line-height: 1.8; }
 
-        @media (max-width: 768px) { .header-inner { flex-direction: column; gap: 10px; } .nav-links { justify-content: center; } }
+        @media (max-width: 768px) {
+            .header-inner { flex-wrap: wrap; gap: 10px; }
+            .menu-toggle { display: inline-flex; align-items: center; gap: 6px; }
+            .nav-links { display: none; width: 100%; flex-direction: column; padding: 8px; background: #ffffff; border: 1px solid #eef2ff; border-radius: 12px; }
+            .nav-links.open { display: flex; }
+        }
 
         .section-details li ul.list-circle {
             margin-right: 1.25rem; /* RTL indentation */
@@ -165,17 +173,20 @@
     <!-- Header -->
     <header class="site-header">
         <div class="header-inner">
-            <nav class="nav-links" aria-label="main">
+            <a href="index.html" class="brand">
+                <span class="logo">AI</span>
+                <span>ورکشاپ هوش مصنوعی در پژوهش</span>
+            </a>
+            <div class="nav-actions">
+                <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mainNav">☰ منو</button>
+            </div>
+            <nav class="nav-links" id="mainNav" aria-label="main">
                 <a href="index.html">صفحه اصلی</a>
                 <a href="index.html#report">گزارش ورکشاپ</a>
                 <a href="workshop.html">ورکشاپ</a>
                 <a href="conference-structure.html">ساختار مقاله</a>
                 <a href="related-works.html">نگارش پیشینه</a>
             </nav>
-            <a href="index.html" class="brand">
-                <span class="logo">AI</span>
-                <span>ورکشاپ هوش مصنوعی در پژوهش</span>
-            </a>
         </div>
     </header>
 
@@ -388,6 +399,18 @@
     </footer>
 
     <script>
+        // Mobile menu toggle
+        (function(){
+            const menuBtn = document.getElementById('menuToggle');
+            const mainNav = document.getElementById('mainNav');
+            if (menuBtn && mainNav) {
+                menuBtn.addEventListener('click', () => {
+                    const isOpen = mainNav.classList.toggle('open');
+                    menuBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                });
+            }
+        })();
+
         // Smooth scrolling for internal anchors
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {

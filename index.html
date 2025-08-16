@@ -304,6 +304,10 @@
                 margin: 20px 10px;
                 padding: 20px;
             }
+            .header-inner { flex-wrap: wrap; gap: 10px; }
+            .menu-toggle { display: inline-flex; align-items: center; gap: 6px; }
+            .nav-links { display: none; width: 100%; flex-direction: column; padding: 8px; background: #ffffff; border: 1px solid #eef2ff; border-radius: 12px; }
+            .nav-links.open { display: flex; }
         }
 
         .floating-elements {
@@ -392,6 +396,9 @@
             gap: 8px;
             flex-wrap: wrap;
         }
+        .nav-actions { display: flex; align-items: center; gap: 8px; }
+        .menu-toggle { display: none; border: 1px solid #e5e7eb; background: #ffffff; border-radius: 10px; padding: 8px 10px; cursor: pointer; }
+        .menu-toggle:focus { outline: 2px solid #667eea55; }
         .nav-links a {
             text-decoration: none;
             color: #2d3748;
@@ -534,17 +541,20 @@
     <!-- Header -->
     <header class="site-header">
         <div class="header-inner">
-            <nav class="nav-links" aria-label="main">
+            <a href="index.html" class="brand">
+                <span class="logo">AI</span>
+                <span>ورکشاپ هوش مصنوعی در پژوهش</span>
+            </a>
+            <div class="nav-actions">
+                <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mainNav">☰ منو</button>
+            </div>
+            <nav class="nav-links" id="mainNav" aria-label="main">
                 <a href="index.html">صفحه اصلی</a>
                 <a href="#report">گزارش ورکشاپ</a>
                 <a href="workshop.html">ورکشاپ</a>
                 <a href="conference-structure.html">ساختار مقاله</a>
                 <a href="related-works.html">نگارش پیشینه</a>
             </nav>
-            <a href="index.html" class="brand">
-                <span class="logo">AI</span>
-                <span>ورکشاپ هوش مصنوعی در پژوهش</span>
-            </a>
         </div>
     </header>
     <!-- Hero Section -->
@@ -661,7 +671,9 @@
                 </summary>
                 <div class="report-body">
                     <ul>
-                        <li>مدرس دانشگاه و مدیر گروه IT</li>
+                        <li>ساناز شهرآئینی</li>
+                        <li>مدیرگروه صنعت مرکز علمی کاربردی جهاد دانشگاهی مشهد</li>
+                        <li>مدرس دانشگاه و کارآفرین اینترنتی</li>
                         <li>توسعه وب فول‌استک، پردازش داده و ابزارهای AI</li>
                         <li>تجربه عملی در ترکیب LLMها و اتوماسیون هوشمند در پژوهش</li>
                     </ul>
@@ -849,6 +861,18 @@
     </footer>
 
     <script>
+        // Mobile menu toggle
+        (function(){
+            const menuBtn = document.getElementById('menuToggle');
+            const mainNav = document.getElementById('mainNav');
+            if (menuBtn && mainNav) {
+                menuBtn.addEventListener('click', () => {
+                    const isOpen = mainNav.classList.toggle('open');
+                    menuBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                });
+            }
+        })();
+
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
