@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اینفوگرافیک: راهنمای نگارش پیشینه پژوهش با هوش مصنوعی</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&family=Noto+Sans:wght@400;700;900&family=Noto+Sans+Arabic:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Vazirmatn', 'Noto Sans Arabic', 'Noto Sans', 'Tahoma', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            margin: 20px auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .card {
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 20px;
+            box-shadow: 
+                0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 32px 64px -12px rgba(0, 0, 0, 0.15),
+                0 16px 32px -8px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+        
+        .card:hover::before {
+            opacity: 1;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+            background: linear-gradient(145deg, #f8fafc, #ffffff);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        
+        .flow-step {
+            position: relative;
+            padding-bottom: 3rem;
+        }
+        
+        .flow-step {
+            position: relative;
+            padding: 2rem;
+            border: 2px solid transparent;
+            border-radius: 20px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            height: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        
+        .flow-step::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #0A9396, #94D2BD, #005F73);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .flow-step:hover {
+            border-color: #0A9396;
+            background: linear-gradient(145deg, #f0f9ff 0%, #e0f2fe 100%);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(10, 147, 150, 0.25);
+        }
+        
+        .flow-step:hover::before {
+            opacity: 1;
+        }
+        
+        .flow-step:not(:last-child) {
+            margin-bottom: 2rem;
+        }
+        
+        .flow-icon {
+            background: linear-gradient(145deg, #0A9396, #005F73);
+            color: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 900;
+            border: 4px solid #94D2BD;
+            box-shadow: 
+                0 8px 16px rgba(10, 147, 150, 0.3),
+                inset 0 2px 4px rgba(255, 255, 255, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        
+        .flow-icon::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #94D2BD, #0A9396, #005F73);
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .flow-step:hover .flow-icon {
+            transform: scale(1.15) rotate(8deg);
+            box-shadow: 
+                0 16px 32px rgba(10, 147, 150, 0.5),
+                inset 0 2px 4px rgba(255, 255, 255, 0.4);
+            border-color: #0A9396;
+        }
+        
+        .flow-step:hover .flow-icon::before {
+            opacity: 1;
+        }
+        
+        .flow-step h3 {
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            line-height: 1.2;
+            text-align: center;
+            width: 100%;
+            font-size: 1rem;
+        }
+        
+        .flow-step p {
+            transition: all 0.3s ease;
+            text-align: center;
+            line-height: 1.5;
+        }
+        
+        .flow-step:hover h3 {
+            color: #0A9396 !important;
+            transform: scale(1.05);
+        }
+        
+        .flow-step:hover p {
+            color: #4a5568 !important;
+        }
+        
+        .content-hero {
+            background: linear-gradient(135deg, #a8b5e6 0%, #b8a5d4 100%);
+            margin: -20px -20px 20px -20px;
+            padding: 40px 20px;
+            border-radius: 20px 20px 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .content-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .content-hero h1 {
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            color: #2d3748 !important;
+            -webkit-text-fill-color: #2d3748;
+        }
+        
+        .content-hero p {
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            color: #4a5568 !important;
+        }
+        
+        .success-section {
+            background: linear-gradient(135deg, #E9D8A6 0%, #f4e4b3 100%);
+            border: 2px solid #d4b483;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .success-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+        
+        @keyframes shimmer {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(180deg); }
+        }
+        
+        .success-item {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .success-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .emoji-large {
+            font-size: 3rem;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+            transition: transform 0.3s ease;
+        }
+        
+        .success-item:hover .emoji-large {
+            transform: scale(1.2) rotate(10deg);
+        }
+        
+        .tool-card {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tool-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 40px 40px 0;
+            border-color: transparent #0A9396 transparent transparent;
+            opacity: 0.8;
+        }
+        
+        .checkmark {
+            background: linear-gradient(45deg, #EE9B00, #CA6702);
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(238, 155, 0, 0.4);
+            margin-left: 8px;
+        }
+        
+        .legacy-footer {
+            background: linear-gradient(135deg, #94D2BD 0%, #0A9396 100%);
+            color: white;
+            border-radius: 20px;
+            margin: 20px -20px -20px -20px;
+            padding: 30px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .legacy-footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="footer-pattern" width="50" height="50" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="2" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23footer-pattern)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .chart-card {
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+        }
+        
+        .chart-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 18px;
+            margin: -2px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .chart-card:hover::before {
+            opacity: 1;
+        }
+        
+        .chart-card:hover {
+            transform: translateY(-5px);
+            color: white;
+        }
+        
+        .chart-card:hover h3,
+        .chart-card:hover p {
+            color: white !important;
+        }
+        
+        /* Responsive improvements */
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 16px;
+            }
+            
+            header {
+                margin: -10px -10px 15px -10px;
+                padding: 30px 15px;
+                border-radius: 16px 16px 0 0;
+            }
+            
+            .flow-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+            
+            .flow-step {
+                height: 280px;
+                padding: 1.5rem;
+            }
+        }
+        
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #a8b5e6, #b8a5d4);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(45deg, #9aa7d8, #a895c8);
+        }
+        
+        /* Navigation Menu Styles */
+        .nav-link {
+            color: #6b7280;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #0A9396, #94D2BD);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+        
+        .nav-link:hover {
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .nav-link:hover::before {
+            left: 0;
+        }
+        
+        .nav-link.active {
+            background: linear-gradient(135deg, #0A9396, #94D2BD);
+            color: white;
+            box-shadow: 0 4px 12px rgba(10, 147, 150, 0.3);
+        }
+        
+        .nav-link.active::before {
+            left: 0;
+        }
+        
+        /* Smooth scrolling for navigation */
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 100px;
+        }
+
+        /* Header and shared components (match index/conference pages) */
+        .site-header { position: sticky; top: 0; z-index: 50; margin: 10px 20px 0; border-radius: 16px; background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.6); }
+        .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; gap: 10px; }
+        .brand { display: flex; align-items: center; gap: 10px; color: #2d3748; font-weight: 800; font-size: 1.1rem; text-decoration: none; }
+        .brand .logo { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #667eea, #764ba2); display: grid; place-items: center; color: #fff; font-size: 18px; box-shadow: 0 6px 16px rgba(102,126,234,0.35); }
+        .nav-links { display: flex; gap: 8px; flex-wrap: wrap; }
+        .nav-actions { display: flex; align-items: center; gap: 8px; }
+        .menu-toggle { display: none; border: 1px solid #e5e7eb; background: #ffffff; border-radius: 10px; padding: 8px 10px; cursor: pointer; }
+        .menu-toggle:focus { outline: 2px solid #667eea55; }
+        .nav-links a { text-decoration: none; color: #2d3748; font-weight: 600; padding: 10px 14px; border-radius: 10px; transition: all .2s ease; }
+        .nav-links a:hover { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; box-shadow: 0 8px 24px rgba(102,126,234,0.35); transform: translateY(-2px); }
+
+        .footer { position: relative; background: linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.08)); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); color: rgba(255,255,255,0.9); padding: 24px 20px; margin: 40px 20px 20px; border-radius: 22px; border: 1px solid rgba(255,255,255,0.28); box-shadow: 0 12px 32px rgba(0,0,0,0.15); overflow: hidden; text-align: center; }
+        .footer::before { content: ''; position: absolute; top: 0; inset-inline: 0; height: 4px; background: linear-gradient(90deg, #667eea, #764ba2, #f093fb); opacity: 0.9; }
+        .footer-inner { max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 6px; align-items: center; }
+        .footer p { margin: 0; line-height: 1.8; }
+
+        @media (max-width: 768px) {
+            .header-inner { flex-wrap: wrap; gap: 10px; }
+            .menu-toggle { display: inline-flex; align-items: center; gap: 6px; }
+            .nav-links { display: none; width: 100%; flex-direction: column; padding: 8px; background: #ffffff; border: 1px solid #eef2ff; border-radius: 12px; }
+            .nav-links.open { display: flex; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Header -->
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="index.html" class="brand">
+                <span class="logo">AI</span>
+                <span>ورکشاپ هوش مصنوعی در پژوهش</span>
+            </a>
+            <div class="nav-actions">
+                <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mainNav">☰ منو</button>
+            </div>
+            <nav class="nav-links" id="mainNav" aria-label="main">
+                <a href="index.html">صفحه اصلی</a>
+                <a href="index.html#report">گزارش ورکشاپ</a>
+                <a href="workshop.html">ورکشاپ</a>
+                <a href="conference-structure.html">ساختار مقاله</a>
+                <a href="related-works.html">نگارش پیشینه</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container mx-auto p-4 md:p-8 max-w-6xl">
+        <div id="main">
+        <header class="text-center mb-12 content-hero">
+            <h1 class="text-4xl md:text-5xl font-black mb-4">راهنمای گام‌به‌گام نگارش پیشینه پژوهش</h1>
+            <p class="text-lg md:text-xl font-bold">با کمک ابزارهای هوش مصنوعی 🤖</p>
+            <p class="mt-2 text-md text-gray-700">مدرس ورکشاپ: <span class="font-bold">ساناز شهرآئینی</span></p>
+            <p class="text-md text-gray-700">برگزارکننده: <span class="font-bold">سازمان جهاد دانشگاهی خراسان رضوی</span></p>
+            <p class="text-sm text-gray-600">ورکشاپ برگزار شده در: <span class="font-bold">مردادماه ۱۴۰۴</span></p>
+            <p class="mt-4 text-gray-600 max-w-3xl mx-auto">
+                این اینفوگرافیک، یک نقشه راه برای استفاده هوشمندانه از ابزارهایی مانند SciSpace، Elicit و Zotero است تا بتوانید بخش پیشینه پژوهش خود را سریع، دقیق و مطابق با استانداردهای علمی بنویسید.
+            </p>
+        </header>
+
+        <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+            <section id="process" class="lg:col-span-3 card p-6 md:p-8">
+                <h2 class="text-2xl font-bold text-center mb-8" style="color: #CA6702;">چهار مرحله کلیدی فرآیند</h2>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+                    
+                    <div class="flow-step flex flex-col items-center">
+                        <div class="flow-icon">۱</div>
+                        <h3 class="text-xl font-bold mt-4 mb-2" style="color: #005F73;">ایده‌یابی و کلیدواژه</h3>
+                        <p class="text-gray-600 text-sm">پیدا کردن ایده به‌روز و استخراج کلیدواژه‌های دقیق با ابزارهایی مانند ChatGPT و AnswerThePublic.</p>
+                    </div>
+
+                    <div class="flow-step flex flex-col items-center">
+                        <div class="flow-icon">۲</div>
+                        <h3 class="text-xl font-bold mt-4 mb-2" style="color: #005F73;">جستجو و مدیریت منابع</h3>
+                        <p class="text-gray-600 text-sm">یافتن مقالات معتبر با Elicit و Semantic Scholar و سازمان‌دهی آن‌ها با Zotero.</p>
+                    </div>
+
+                    <div class="flow-step flex flex-col items-center">
+                        <div class="flow-icon">۳</div>
+                        <h3 class="text-xl font-bold mt-4 mb-2" style="color: #005F73;">نگارش پیشینه</h3>
+                        <p class="text-gray-600 text-sm">تولید یک متن علمی منسجم با استفاده از مقالات گردآوری‌شده در محیط SciSpace.</p>
+                    </div>
+
+                    <div class="flow-step flex flex-col items-center">
+                        <div class="flow-icon">۴</div>
+                        <h3 class="text-xl font-bold mt-4 mb-2" style="color: #005F73;">انسانی‌سازی و بازبینی</h3>
+                        <p class="text-gray-600 text-sm">طبیعی‌سازی لحن متن با Quillbot و بررسی آن با ابزارهای AI Detector مانند ZeroGPT و academi.cx.</p>
+                    </div>
+
+                </div>
+            </section>
+            
+            <div class="card p-6 md:col-span-1 lg:col-span-1 chart-card">
+                <h3 class="text-xl font-bold mb-4 text-center" style="color: #BB3E03;">نقش ابزارها در فرآیند</h3>
+                <p class="text-sm text-gray-600 mb-4 text-center">هر ابزار نقش مکملی را ایفا می‌کند. این نمودار توزیع تقریبی تمرکز کاری بین ابزارهای اصلی را نشان می‌دهد.</p>
+                <div class="chart-container">
+                    <canvas id="toolsDonutChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card p-6 md:col-span-1 lg:col-span-2 chart-card">
+                <h3 class="text-xl font-bold mb-4 text-center" style="color: #BB3E03;">تاثیر انسانی‌سازی متن</h3>
+                <p class="text-sm text-gray-600 mb-2 text-center">استفاده از ابزارهای بازنویسی مانند Quillbot می‌تواند به شکل چشمگیری احتمال تشخیص متن به عنوان محتوای تولیدی توسط هوش مصنوعی را کاهش دهد.</p>
+                <p class="text-xs text-gray-500 mb-4 text-center">این گام برای حفظ اصالت و اعتبار علمی متن شما حیاتی است.</p>
+                <div class="chart-container">
+                    <canvas id="humanizeBarChart"></canvas>
+                </div>
+            </div>
+
+            <div id="tools" class="card p-6 tool-card">
+                <h3 class="text-xl font-bold mb-4" style="color: #0A9396;">Elicit: جستجوی هوشمند</h3>
+                <ul class="space-y-3 text-gray-700">
+                    <li class="flex items-start"><span class="checkmark">✓</span><span>جستجوی مقالات بر اساس سوال تحقیق</span></li>
+                    <li class="flex items-start"><span class="checkmark">✓</span><span>نمایش خلاصه، روش و نتایج در جدول</span></li>
+                    <li class="flex items-start"><span class="checkmark">✓</span><span>فیلتر بر اساس سال انتشار یا حوزه</span></li>
+                    <li class="flex items-start"><span class="checkmark">✓</span><span>خروجی داده‌ها برای استفاده در متن</span></li>
+                </ul>
+            </div>
+
+            <div class="card p-6 tool-card">
+                <h3 class="text-xl font-bold mb-4" style="color: #0A9396;">Zotero: مدیریت ارجاعات</h3>
+                <ul class="space-y-3 text-gray-700">
+                    <li class="flex items-start"><span class="checkmark">✓</span><span>ذخیره خودکار اطلاعات کتابشناختی</span></li>
+                    <li class="flex items-start"><span class="checkmark">✓</span><span>درج مستقیم ارجاع در ورد و گوگل</span></li>
+                    <li class="flex items-start"><span class="checkmark">✓</span><span>ایجاد خودکار فهرست منابع </span></li>
+                    <li class="flex items-start"><span class="checkmark">✓</span><span>همگام‌سازی بین دستگاه‌ها</span></li>
+                </ul>
+            </div>
+
+            <div class="card p-6 tool-card">
+                <h3 class="text-xl font-bold mb-4" style="color: #0A9396;">SciSpace: نگارش یکپارچه</h3>
+                <ul class="space-y-3 text-gray-700">
+                    <li class="flex items-start"><span class="checkmark">✓</span><span>خواندن PDF و هایلایت بخش‌های کلیدی</span></li>
+                    <li class="flex items-start"><span class="checkmark">✓</span><span>تولید خلاصه علمی با ارجاعات دقیق</span></li>
+                    <li class="flex items-start"><span class="checkmark">✓</span><span>پیشنهاد مقالات مرتبط بر اساس محتوا</span></li>
+                    <li class="flex items-start"><span class="checkmark">✓</span><span>بازنویسی متن برای وضوح بیشتر</span></li>
+                </ul>
+            </div>
+
+            <section id="tips" class="lg:col-span-3 card p-6 md:p-8 success-section">
+                <h2 class="text-2xl font-bold text-center mb-6" style="color: #9B2226;">نکات کلیدی موفقیت ✨</h2>
+                <div class="flex flex-col md:flex-row justify-around text-center gap-6">
+                    <div class="flex-1 success-item">
+                        <p class="text-4xl mb-2 emoji-large">🎯</p>
+                        <p class="font-bold" style="color: #AE2012;">ارجاع‌دهی دقیق</p>
+                        <p class="text-sm text-gray-700 mt-1">همیشه از Zotero برای ساخت Citation و Bibliography استفاده کنید تا خطایی رخ ندهد.</p>
+                    </div>
+                    <div class="flex-1 success-item">
+                        <p class="text-4xl mb-2 emoji-large">🧠</p>
+                        <p class="font-bold" style="color: #AE2012;">تحلیل شخصی</p>
+                        <p class="text-sm text-gray-700 mt-1">از هوش مصنوعی برای کمک بهره بگیرید، اما متن نهایی باید بازتاب تحلیل و فهم خودتان باشد.</p>
+                    </div>
+                    <div class="flex-1 success-item">
+                        <p class="text-4xl mb-2 emoji-large">📜</p>
+                        <p class="font-bold" style="color: #AE2012;">انسجام و ترتیب</p>
+                        <p class="text-sm text-gray-700 mt-1">ترتیب و انسجام منابع برای پذیرش مقاله توسط داوران بسیار مهم است.</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+        </div>
+
+        <footer class="footer">
+            <div class="footer-inner">
+                <p>&copy; 2025 ورکشاپ هوش مصنوعی در پژوهش — تمامی حقوق محفوظ است.</p>
+                <p>مدرس: ساناز شهرآئینی | برگزارکننده: سازمان جهاد دانشگاهی خراسان رضوی</p>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        // منتظر بارگذاری کامل صفحه
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle for responsive header
+            const menuBtn = document.getElementById('menuToggle');
+            const mainNav = document.getElementById('mainNav');
+            if (menuBtn && mainNav) {
+                menuBtn.addEventListener('click', () => {
+                    const isOpen = mainNav.classList.toggle('open');
+                    menuBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                });
+            }
+            // Navigation functionality
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('section[id], div[id], footer[id]');
+            
+            // Update active nav link based on scroll position
+            function updateActiveNavLink() {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (window.pageYOffset >= (sectionTop - 200)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${current}`) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+            
+            // Smooth scroll to sections
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetSection = document.getElementById(targetId);
+                    
+                    if (targetSection) {
+                        targetSection.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+            
+            // Update active nav link on scroll
+            window.addEventListener('scroll', updateActiveNavLink);
+            
+            // Initialize active nav link
+            updateActiveNavLink();
+            
+            // Auto-number process steps (۱, ۲, ۳, ۴) based on DOM order
+            (function autoNumberFlowSteps(){
+                const persianDigits = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+                const toPersianNumber = (n) => String(n).split('').map(d => persianDigits[Number(d)]).join('');
+                const icons = document.querySelectorAll('#process .flow-step .flow-icon');
+                icons.forEach((el, idx) => {
+                    const num = idx + 1;
+                    el.textContent = toPersianNumber(num);
+                    el.setAttribute('aria-label', `مرحله ${num}`);
+                });
+            })();
+            // تابع callback برای tooltip
+            const tooltipTitleCallback = (tooltipItems) => {
+                const item = tooltipItems[0];
+                let label = item.chart.data.labels[item.dataIndex];
+                if (Array.isArray(label)) {
+                    return label.join(' ');
+                } else {
+                    return label;
+                }
+            };
+
+            // نمودار Donut برای نقش ابزارها
+            const donutChartElement = document.getElementById('toolsDonutChart');
+            if (donutChartElement) {
+                const donutChartCtx = donutChartElement.getContext('2d');
+                new Chart(donutChartCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['مدیریت منابع (Zotero)', 'نگارش و تحلیل (SciSpace)', 'جستجو و ایده‌یابی (Elicit)'],
+                        datasets: [{
+                            label: 'نقش ابزارها',
+                            data: [40, 35, 25],
+                            backgroundColor: ['#005F73', '#0A9396', '#94D2BD'],
+                            borderColor: '#ffffff',
+                            borderWidth: 4,
+                            hoverOffset: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    font: {
+                                        family: 'Vazirmatn, Noto Sans, Tahoma, Arial'
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    title: tooltipTitleCallback
+                                },
+                                bodyFont: {
+                                    family: 'Vazirmatn, Noto Sans, Tahoma, Arial'
+                                },
+                                titleFont: {
+                                    family: 'Vazirmatn, Noto Sans, Tahoma, Arial'
+                                }
+                            }
+                        },
+                        cutout: '60%'
+                    }
+                });
+            }
+
+            // نمودار Bar برای تاثیر انسانی‌سازی
+            const barChartElement = document.getElementById('humanizeBarChart');
+            if (barChartElement) {
+                const barChartCtx = barChartElement.getContext('2d');
+                new Chart(barChartCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['متن اولیه تولید شده با AI', 'متن پس از انسانی‌سازی'],
+                        datasets: [{
+                            label: 'درصد شناسایی توسط AI Detector',
+                            data: [85, 15],
+                            backgroundColor: ['#AE2012', '#0A9396'],
+                            borderRadius: 6,
+                            barPercentage: 0.6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '%'
+                                    }
+                                }
+                            },
+                            y: {
+                                ticks: {
+                                   font: {
+                                        family: 'Vazirmatn, Noto Sans, Tahoma, Arial',
+                                        size: 12
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    title: tooltipTitleCallback,
+                                    label: function(context) {
+                                        return 'درصد شناسایی: ' + context.raw + '%';
+                                    }
+                                },
+                                bodyFont: {
+                                    family: 'Vazirmatn, Noto Sans, Tahoma, Arial'
+                                },
+                                titleFont: {
+                                    family: 'Vazirmatn, Noto Sans, Tahoma, Arial'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>
