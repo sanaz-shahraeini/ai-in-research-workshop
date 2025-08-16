@@ -376,6 +376,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 14px 18px;
+            gap: 10px;
         }
         .brand {
             display: flex;
@@ -398,7 +399,7 @@
             box-shadow: 0 6px 16px rgba(102,126,234,0.35);
         }
         .nav-links {
-            display: flex;
+            display: none; /* hidden by default */
             gap: 8px;
             flex-wrap: wrap;
         }
@@ -539,7 +540,13 @@
         }
         @media (max-width: 768px) {
             .header-inner { flex-direction: column; gap: 10px; }
-            .nav-links { justify-content: center; }
+            .menu-toggle { display: inline-flex; align-items: center; gap: 6px; }
+            .nav-links { display: none; width: 100%; flex-direction: column; padding: 8px; background: #ffffff; border: 1px solid #eef2ff; border-radius: 12px; justify-content: center; }
+            .nav-links.open { display: flex; }
+        }
+
+        @media (min-width: 769px) {
+            .nav-links { display: flex; }
         }
     </style>
 </head>
@@ -695,7 +702,7 @@
                 </summary>
                 <div class="report-body">
                     <ul>
-                        <li>مجموع ساعات دوره: ۶ ساعت آموزشی</li>
+                        <li>مجموع ساعات دوره: ۶+۲ ساعت آموزشی (۲ ساعت فوق‌العاده)</li>
                         <li>تعداد جلسات: ۳ جلسه (۲ ساعته)</li>
                         <li>شیوه اجرا: حضوری در مشهد + آنلاین برای سایر شهرها</li>
                     </ul>
@@ -824,7 +831,7 @@
         <h2 class="hero-title" style="font-size: 2.5rem; margin-bottom: 20px;">آمار و دستاوردها</h2>
         <div class="stats-grid">
             <div class="stat-item">
-                <span class="stat-number">۶</span>
+                <span class="stat-number">۶+۲</span>
                 <span class="stat-label">ساعت آموزش عملی</span>
             </div>
             <div class="stat-item">
@@ -836,8 +843,8 @@
                 <span class="stat-label">بخش مقاله‌نویسی</span>
                     </div>
             <div class="stat-item">
-                <span class="stat-number">۱۰۰%</span>
-                <span class="stat-label">رضایت شرکت‌کنندگان</span>
+                <span class="stat-number">به‌زودی</span>
+                <span class="stat-label">نتیجه رضایت شرکت‌کنندگان (پس از نظرسنجی)</span>
                     </div>
                 </div>
             </section>
@@ -860,13 +867,13 @@
     <footer class="footer">
         <div class="footer-inner">
             <p>&copy; 2025 ورکشاپ هوش مصنوعی در پژوهش — تمامی حقوق محفوظ است.</p>
-            <p>مدرس: ساناز شهرآئینی | برگزارکننده: سازمان جهاد دانشگاهی خراسان رضوی</p>
+            <p>مدرس: ساناز شهرآئینی | برگزارکننده: سازمان جهاد دانشگاهی خراسان رضوی | مجری: مرکز علمی کاربردی جهاد دانشگاهی مشهد</p>
         </div>
     </footer>
 
     <script>
-        // Mobile menu toggle
-        (function(){
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
             const menuBtn = document.getElementById('menuToggle');
             const mainNav = document.getElementById('mainNav');
             if (menuBtn && mainNav) {
@@ -874,57 +881,66 @@
                     const isOpen = mainNav.classList.toggle('open');
                     menuBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
                 });
+                // Close menu on nav link click (mobile UX)
+                mainNav.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        if (mainNav.classList.contains('open')) {
+                            mainNav.classList.remove('open');
+                            menuBtn.setAttribute('aria-expanded', 'false');
+                        }
+                    });
+                });
             }
-        })();
 
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                const href = this.getAttribute('href');
-                const target = document.querySelector(href);
-                if (!target) return; // allow default if no target
-                e.preventDefault();
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    const href = this.getAttribute('href');
+                    const target = document.querySelector(href);
+                    if (!target) return; // allow default if no target
+                    e.preventDefault();
 
-                const header = document.querySelector('.site-header');
-                const headerHeight = header ? header.offsetHeight + 8 : 0; // small gap
-                const targetY = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                    const header = document.querySelector('.site-header');
+                    const headerHeight = header ? header.offsetHeight + 8 : 0; // small gap
+                    const targetY = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
 
-                if ('scrollBehavior' in document.documentElement.style) {
-                    window.scrollTo({ top: targetY, behavior: 'smooth' });
-                } else {
-                    window.scrollTo(0, targetY);
-                }
+                    if ('scrollBehavior' in document.documentElement.style) {
+                        window.scrollTo({ top: targetY, behavior: 'smooth' });
+                    } else {
+                        window.scrollTo(0, targetY);
+                    }
 
-                // Update URL hash (without jumping)
-                if (history.pushState) {
-                    history.pushState(null, '', href);
-                } else {
-                    window.location.hash = href;
-                }
+                    // Update URL hash (without jumping)
+                    if (history.pushState) {
+                        history.pushState(null, '', href);
+                    } else {
+                        window.location.hash = href;
+                    }
+                });
             });
-        });
 
-        // Add scroll animation for feature cards
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
+            // Add scroll animation for feature cards
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all feature cards
+            document.querySelectorAll('.feature-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(50px)';
+                card.style.transition = 'all 0.6s ease';
+                observer.observe(card);
             });
-        }, observerOptions);
-
-        // Observe all feature cards
-        document.querySelectorAll('.feature-card').forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(50px)';
-            card.style.transition = 'all 0.6s ease';
-            observer.observe(card);
         });
     </script>
 </body>

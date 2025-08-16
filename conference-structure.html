@@ -65,11 +65,26 @@
             gap: .5rem;
         }
         .section-title span {
-            margin-left: 0.75rem; /* For RTL */
+            /* Number badge as a circular icon */
+            margin-left: 0.5rem; /* For RTL: space between badge and title */
             margin-right: 0;
-            color: #6366f1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            min-height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #ffffff;
             font-weight: 900;
+            font-size: 1rem;
+            box-shadow: 0 8px 24px rgba(102,126,234,0.35);
+            border: 3px solid rgba(255,255,255,0.65);
+            direction: ltr; /* Keep numerals in English order */
         }
+        /* optional badge removed per request */
         .section-details li {
             margin-bottom: 0.5rem;
             line-height: 1.9;
@@ -203,7 +218,7 @@
         <section id="conference-paper-structure" class="main-content-card">
             <!-- 1. Title -->
             <div class="section-card border-color-1">
-                <h2 class="section-title"><span>1.</span> Title</h2>
+                <h2 class="section-title"><span>1</span> Title</h2>
                 <ul class="list-disc list-inside section-details">
                     <li><strong class="font-bold">Short, precise, and descriptive.</strong></li>
                     <li>Should include <strong class="font-bold">keywords relevant to your research.</strong></li>
@@ -213,7 +228,7 @@
 
             <!-- 2. Authors & Affiliations -->
             <div class="section-card border-color-2">
-                <h2 class="section-title"><span>2.</span> Authors & Affiliations</h2>
+                <h2 class="section-title"><span>2</span> Authors & Affiliations</h2>
                 <ul class="list-disc list-inside section-details">
                     <li><strong class="font-bold">Full names of all authors.</strong></li>
                     <li><strong class="font-bold">Institutional affiliation</strong> (university, department, organization).</li>
@@ -223,7 +238,7 @@
 
             <!-- 3. Abstract -->
             <div class="section-card border-color-3">
-                <h2 class="section-title"><span>3.</span> Abstract</h2>
+                <h2 class="section-title"><span>3</span> Abstract</h2>
                 <ul class="list-disc list-inside section-details">
                     <li><strong class="font-bold">150–250 words summarizing:</strong>
                         <ul class="list-circle list-inside ml-5 mt-2">
@@ -240,7 +255,7 @@
 
             <!-- 4. Keywords -->
             <div class="section-card border-color-4">
-                <h2 class="section-title"><span>4.</span> Keywords</h2>
+                <h2 class="section-title"><span>4</span> Keywords</h2>
                 <ul class="list-disc list-inside section-details">
                     <li><strong class="font-bold">4–6 words/phrases that describe your work.</strong></li>
                     <li>Used for <strong class="font-bold">indexing and search engines.</strong></li>
@@ -250,7 +265,7 @@
 
             <!-- 5. Introduction -->
             <div class="section-card border-color-5">
-                <h2 class="section-title"><span>5.</span> Introduction</h2>
+                <h2 class="section-title"><span>5</span> Introduction</h2>
                 <ul class="list-disc list-inside section-details">
                     <li><strong class="font-bold">Background:</strong> Context and significance of the problem.</li>
                     <li><strong class="font-bold">Gap:</strong> What is missing in existing research.</li>
@@ -261,7 +276,7 @@
 
             <!-- 6. Related Work / Literature Review -->
             <div class="section-card border-color-6">
-                <h2 class="section-title"><span>6.</span> Related Work / Literature Review</h2>
+                <h2 class="section-title"><span>6</span> Related Work / Literature Review</h2>
                 <ul class="list-disc list-inside section-details">
                     <li><strong class="font-bold">Summary of relevant previous research.</strong></li>
                     <li>Highlight similarities and differences with your approach.</li>
@@ -271,7 +286,7 @@
 
             <!-- 7. Methodology -->
             <div class="section-card border-color-7">
-                <h2 class="section-title"><span>7.</span> Methodology</h2>
+                <h2 class="section-title"><span>7</span> Methodology</h2>
                 <ul class="list-disc list-inside section-details">
                     <li><strong class="font-bold">Detailed explanation of your research design:</strong>
                         <ul class="list-circle list-inside ml-5 mt-2">
@@ -286,7 +301,7 @@
 
             <!-- 8. Results -->
             <div class="section-card border-color-8">
-                <h2 class="section-title"><span>8.</span> Results</h2>
+                <h2 class="section-title"><span>8</span> Results</h2>
                 <ul class="list-disc list-inside section-details">
                     <li><strong class="font-bold">Present findings clearly:</strong>
                         <ul class="list-circle list-inside ml-5 mt-2">
@@ -300,7 +315,7 @@
 
             <!-- 9. Discussion -->
             <div class="section-card border-color-9">
-                <h2 class="section-title"><span>9.</span> Discussion</h2>
+                <h2 class="section-title"><span>9</span> Discussion</h2>
                 <ul class="list-disc list-inside section-details">
                     <li><strong class="font-bold">Interpret your results.</strong></li>
                     <li>Compare with expectations and previous studies.</li>
@@ -311,7 +326,7 @@
 
             <!-- 10. Conclusion & Future Work -->
             <div class="section-card border-color-10">
-                <h2 class="section-title"><span>10.</span> Conclusion & Future Work</h2>
+                <h2 class="section-title"><span>10</span> Conclusion & Future Work</h2>
                 <ul class="list-disc list-inside section-details">
                     <li><strong class="font-bold">Summarize key takeaways.</strong></li>
                     <li><strong class="font-bold">Suggest possible improvements or future research directions.</strong></li>
@@ -320,7 +335,7 @@
 
             <!-- 11. References -->
             <div class="section-card border-color-11">
-                <h2 class="section-title"><span>11.</span> References</h2>
+                <h2 class="section-title"><span>11</span> References</h2>
                 <ul class="list-disc list-inside section-details">
                     <li>Follow the conference's <strong class="font-bold">citation style</strong> (e.g., IEEE, APA).</li>
                     <li>Only include sources cited in your paper.</li>
@@ -329,7 +344,7 @@
 
             <!-- 12. Acknowledgements (optional) -->
             <div class="section-card border-color-12">
-                <h2 class="section-title"><span>12.</span> Acknowledgements <span class="text-sm text-gray-500">(optional)</span></h2>
+                <h2 class="section-title"><span>12</span> Acknowledgements <span class="text-sm text-gray-500">(optional)</span></h2>
                 <ul class="list-disc list-inside section-details">
                     <li><strong class="font-bold">Thank contributors, funding bodies, or institutions.</strong></li>
                 </ul>
@@ -394,7 +409,7 @@
     <footer class="footer">
         <div class="footer-inner">
             <p>&copy; 2025 ورکشاپ هوش مصنوعی در پژوهش — تمامی حقوق محفوظ است.</p>
-            <p>مدرس: ساناز شهرآئینی | برگزارکننده: سازمان جهاد دانشگاهی خراسان رضوی</p>
+            <p>مدرس: ساناز شهرآئینی | برگزارکننده: سازمان جهاد دانشگاهی خراسان رضوی | مجری: مرکز علمی کاربردی جهاد دانشگاهی مشهد</p>
         </div>
     </footer>
 
